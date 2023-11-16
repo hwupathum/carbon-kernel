@@ -505,7 +505,7 @@
         <hibernate.orbit.version>3.2.5.ga-wso2v1</hibernate.orbit.version>
 
         <!-- bouncycastle -->
-        <bouncycastle.version>1.70.0.wso2v1</bouncycastle.version>
+        <bouncycastle.version>1.77</bouncycastle.version>
         <imp.pkg.version.bcp>[1.0.0, 2.0.0)</imp.pkg.version.bcp>
 
         <!--BPS specific-->
@@ -985,13 +985,18 @@
                 <version>${equinox.osgi.compatibility.state.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.orbit.org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.orbit.org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk15on</artifactId>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
             <dependency>
