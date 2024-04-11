@@ -50,21 +50,22 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.orbit.commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
+            <groupId>org.wso2.org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <!-- Test dependencies -->
+        <dependency>
             <groupId>org.apache.httpcomponents.wso2</groupId>
             <artifactId>httpcore</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.utils</artifactId>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
@@ -90,6 +91,7 @@
                         <Import-Package>
                             org.osgi.framework.*,
                             org.apache.commons.logging.*; version="${import.package.version.commons.logging}",
+                            org.wso2.carbon.caching.impl.*,
                             *;resolution:=optional
                         </Import-Package>
                         <Export-Package>
