@@ -23,6 +23,7 @@ import com.google.common.cache.RemovalListener;
 
 import java.io.Serializable;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,7 +48,7 @@ public abstract class ClientBaseCache<K extends Serializable, V> {
 
         cache = CacheBuilder.newBuilder()
                 .maximumSize(cacheSize)
-                .expireAfterAccess(expireAfterAccess, TimeUnit.MINUTES)
+                .expireAfterAccess(expireAfterAccess, TimeUnit.MILLISECONDS)
                 .removalListener(removalListener)
                 .build();
     }
@@ -61,9 +62,14 @@ public abstract class ClientBaseCache<K extends Serializable, V> {
 
         try {
             return cache.get(key, loader);
-        } catch (Exception e) {
+        } catch (ExecutionException e) {
             // TODO: handle exception
             return null;
         }
+    }
+
+    public V get(K key) {
+
+        return cache.getIfPresent(key);
     }
 }

@@ -32,6 +32,8 @@ public class HttpClientCache extends ClientBaseCache<String, CloseableHttpClient
     private HttpClientCache(int cacheSize, int expireAfterAccess) {
 
         super(cacheSize, expireAfterAccess, notification -> {
+            // This is not called at expire
+            // https://stackoverflow.com/questions/21986551/guava-cachebuilder-doesnt-call-removal-listener
             try {
                 if (notification.getValue() != null) {
                     notification.getValue().close();
@@ -49,7 +51,7 @@ public class HttpClientCache extends ClientBaseCache<String, CloseableHttpClient
         if (instance == null) {
             int ttlMinutes = 1;
             int cacheTimeoutMinutes = 5;
-            instance = new HttpClientCache(100, ttlMinutes + cacheTimeoutMinutes);
+            instance = new HttpClientCache(100, (ttlMinutes + cacheTimeoutMinutes) * 60 * 1000);
         }
         return instance;
     }
