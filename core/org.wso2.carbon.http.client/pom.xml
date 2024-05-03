@@ -55,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
+            <artifactId>httpclient5</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -63,8 +63,8 @@
         </dependency>
         <!-- Test dependencies -->
         <dependency>
-            <groupId>org.apache.httpcomponents.wso2</groupId>
-            <artifactId>httpcore</artifactId>
+            <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
+            <artifactId>httpcore5</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

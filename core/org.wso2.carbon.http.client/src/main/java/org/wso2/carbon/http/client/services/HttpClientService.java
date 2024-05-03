@@ -17,7 +17,7 @@
  */
 package org.wso2.carbon.http.client.services;
 
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 
 import java.io.IOException;
 import java.net.URL;
