@@ -35,14 +35,7 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class ClientBaseCache<K extends Serializable, V> {
 
-    private static final int MAXIMUM_CACHE_SIZE = 100;
-    private static final int EXPIRE_DURATION = 30;
     private final Cache<K, V> cache;
-
-    protected ClientBaseCache(RemovalListener<K, V> removalListener) {
-
-         this(MAXIMUM_CACHE_SIZE, EXPIRE_DURATION, removalListener);
-    }
 
     protected ClientBaseCache(int cacheSize, int expireAfterAccess, RemovalListener<K, V> removalListener) {
 
