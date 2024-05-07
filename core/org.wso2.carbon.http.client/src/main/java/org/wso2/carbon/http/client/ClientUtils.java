@@ -32,9 +32,9 @@ public class ClientUtils {
     public static CloseableHttpClient createClient() {
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create().useSystemProperties();
-
-        log.info("Creating a new HttpClient instance");
-
+        if (log.isDebugEnabled()) {
+            log.debug("Creating a new HttpClient instance");
+        }
         return httpClientBuilder.build();
 
     }

@@ -72,4 +72,9 @@ public abstract class ClientBaseCache<K extends Serializable, V> {
 
         return cache.getIfPresent(key);
     }
+
+    public void cleanUp() {
+
+        cache.cleanUp();
+    }
 }

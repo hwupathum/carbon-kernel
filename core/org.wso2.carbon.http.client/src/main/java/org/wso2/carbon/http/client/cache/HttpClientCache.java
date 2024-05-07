@@ -29,7 +29,7 @@ public class HttpClientCache extends ClientBaseCache<String, CloseableHttpClient
     private static HttpClientCache instance;
 
 
-    private HttpClientCache(int cacheSize, int expireAfterAccess) {
+    protected HttpClientCache(int cacheSize, int expireAfterAccess) {
 
         super(cacheSize, expireAfterAccess, notification -> {
             // This is not called at expire
@@ -37,8 +37,10 @@ public class HttpClientCache extends ClientBaseCache<String, CloseableHttpClient
             try {
                 if (notification.getValue() != null) {
                     notification.getValue().close();
-                    log.info("Http Client - " + notification.getKey() + " removed due to " +
-                            notification.getCause());
+                    if (log.isDebugEnabled()) {
+                        log.debug("Http Client - " + notification.getKey() + " removed due to " +
+                                notification.getCause());
+                    }
                 }
             } catch (IOException e) {
                 log.error("Error occurred while closing the http client for key: " + notification.getKey(), e);
