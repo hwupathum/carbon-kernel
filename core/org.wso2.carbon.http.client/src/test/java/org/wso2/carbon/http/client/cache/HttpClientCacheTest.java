@@ -1,6 +1,5 @@
 package org.wso2.carbon.http.client.cache;
 
-import com.google.common.cache.RemovalListener;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.http.client.ClientUtils;
