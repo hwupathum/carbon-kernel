@@ -31,8 +31,19 @@ public class HttpClientCacheTest {
         Thread.sleep(ACCESS_TIMEOUT / 2);
         Assert.assertNotNull(cache.get("key"));
         Thread.sleep(ACCESS_TIMEOUT * 5);
-        cache.cleanUp();
+//        cache.cleanUp();
         Assert.assertNull(cache.get("key")); //return null
+    }
+
+    @Test(description = " Test case for cache eviction with loader")
+    public void cacheEvictionLoaderTest() throws InterruptedException {
+        HttpClientCache cache = new HttpClientCache(5, ACCESS_TIMEOUT);
+
+        cache.put("key", ClientUtils.createClient());
+        Thread.sleep(ACCESS_TIMEOUT / 2);
+        Assert.assertNotNull(cache.get("key"));
+        Thread.sleep(ACCESS_TIMEOUT * 5);
+        Assert.assertNotNull(cache.get("key", ClientUtils::createClient)); //return null
     }
 
 }

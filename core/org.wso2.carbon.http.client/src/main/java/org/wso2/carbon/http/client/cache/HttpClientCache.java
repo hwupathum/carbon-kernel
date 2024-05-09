@@ -31,19 +31,20 @@ public class HttpClientCache extends ClientBaseCache<String, CloseableHttpClient
 
     protected HttpClientCache(int cacheSize, int expireAfterAccess) {
 
-        super(cacheSize, expireAfterAccess, notification -> {
+        super(cacheSize, expireAfterAccess, httpClientCacheEntry -> {
             // This is not called at expire
             // https://stackoverflow.com/questions/21986551/guava-cachebuilder-doesnt-call-removal-listener
             try {
-                if (notification.getValue() != null) {
-                    notification.getValue().close();
+                if (httpClientCacheEntry.getValue() != null) {
+                    CloseableHttpClient client = httpClientCacheEntry.getValue();
+                    client.close();
                     if (log.isDebugEnabled()) {
-                        log.debug("Http Client - " + notification.getKey() + " removed due to " +
-                                notification.getCause());
+                        log.debug("Http Client - " + httpClientCacheEntry.getKey() + " removed due to " +
+                                httpClientCacheEntry.getCause());
                     }
                 }
             } catch (IOException e) {
-                log.error("Error occurred while closing the http client for key: " + notification.getKey(), e);
+                log.error("Error occurred while closing the http client for key: " + httpClientCacheEntry.getKey(), e);
             }
         });
     }
