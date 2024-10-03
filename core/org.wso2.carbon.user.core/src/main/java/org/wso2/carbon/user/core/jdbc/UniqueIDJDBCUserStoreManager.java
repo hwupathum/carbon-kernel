@@ -2553,7 +2553,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
                     sqlStmt = realmConfig.getUserStoreProperty(JDBCRealmConstants.GET_USERS_FOR_USERNAME);
                 }
             } else {
-                if ((!isCaseSensitiveUsername() && UID.equals(property)) || isCaseInsensitiveProperty(property)) {
+                if ((!isCaseSensitiveUsername() && UID.equals(property)) || isCaseInsensitiveProperty()) {
                     sqlStmt = realmConfig.getUserStoreProperty(JDBCCaseInsensitiveConstants.
                             GET_USERS_FOR_PROP_WITH_ID_CASE_INSENSITIVE);
                 } else {
@@ -2569,7 +2569,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
                     sqlStmt = realmConfig.getUserStoreProperty(JDBCRealmConstants.GET_USER_FOR_USERNAME);
                 }
             } else {
-                if ((!isCaseSensitiveUsername() && UID.equals(property)) || isCaseInsensitiveProperty(property)) {
+                if ((!isCaseSensitiveUsername() && UID.equals(property)) || isCaseInsensitiveProperty()) {
                     sqlStmt = realmConfig.getUserStoreProperty(JDBCCaseInsensitiveConstants.
                             GET_USERS_FOR_CLAIM_VALUE_WITH_ID_CASE_INSENSITIVE);
                 } else {
@@ -3119,16 +3119,15 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
         return !Boolean.parseBoolean(isUsernameCaseInsensitiveString);
     }
 
-    private boolean isCaseInsensitiveProperty(String property) {
+    private boolean isCaseInsensitiveProperty() {
 
         String caseInsensitiveAttributesProperty = realmConfig.getUserStoreProperty(
                 UserStoreConfigConstants.CASE_INSENSITIVE_ATTRIBUTES);
-        if (StringUtils.isBlank(caseInsensitiveAttributesProperty)) {
+        if (StringUtils.isBlank(caseInsensitiveAttributesProperty) ||
+                "false".equalsIgnoreCase(caseInsensitiveAttributesProperty)) {
             return false;
         }
-        String[] caseInsensitiveAttributes = Arrays.stream(caseInsensitiveAttributesProperty.split(","))
-                .map(String::trim).toArray(String[]::new);
-        return ArrayUtils.contains(caseInsensitiveAttributes, property);
+        return true;
     }
 
     @Override
