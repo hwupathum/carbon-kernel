@@ -28,6 +28,13 @@ import java.util.Map;
 
 public class JDBCRealmUtil {
 
+    private static final String STATE_INTERMEDIATE = "Intermediate";
+    private static final String STATE_HYBRID = "Hybrid";
+    private static final String STATE_UNICODE = "Unicode";
+
+    private static final String UM_ATTR_VALUE = "UM_ATTR_VALUE";
+    private static final String UM_ATTR_VALUE_UNICODE = "UM_ATTR_VALUE_UNICODE";
+
     public static Map<String, String> getSQL(Map<String, String> properties) {
 
         if (!properties.containsKey(JDBCRealmConstants.SELECT_USER)) {
@@ -47,7 +54,12 @@ public class JDBCRealmUtil {
         }
 
         if (!properties.containsKey(JDBCRealmConstants.SELECT_USER_WITH_ID)) {
-            properties.put(JDBCRealmConstants.SELECT_USER_WITH_ID, JDBCRealmConstants.SELECT_USER_WITH_ID_SQL);
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.SELECT_USER_WITH_ID_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
+                    JDBCRealmConstants.SELECT_USER_WITH_ID_SQL);
+            properties.put(JDBCRealmConstants.SELECT_USER_WITH_ID, sql);
         }
 
         if (!properties.containsKey(JDBCRealmConstants.SELECT_USER_ID_FROM_USER_NAME)) {
@@ -192,40 +204,76 @@ public class JDBCRealmUtil {
                     JDBCRealmConstants.GET_IS_USER_NAME_EXISTING_SQL);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_PROPS_FOR_PROFILE)) {
-            properties.put(JDBCRealmConstants.GET_PROPS_FOR_PROFILE,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_PROPS_FOR_PROFILE_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_PROPS_FOR_PROFILE_SQL);
+            properties.put(JDBCRealmConstants.GET_PROPS_FOR_PROFILE, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_PROPS_FOR_PROFILE_WITH_ID)) {
-            properties.put(JDBCRealmConstants.GET_PROPS_FOR_PROFILE_WITH_ID,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_PROPS_FOR_PROFILE_WITH_ID_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_PROPS_FOR_PROFILE_WITH_ID_SQL);
+            properties.put(JDBCRealmConstants.GET_PROPS_FOR_PROFILE_WITH_ID, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_USERS_PROPS_FOR_PROFILE)) {
-            properties.put(JDBCRealmConstants.GET_USERS_PROPS_FOR_PROFILE,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_USERS_PROPS_FOR_PROFILE_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_USERS_PROPS_FOR_PROFILE_SQL);
+            properties.put(JDBCRealmConstants.GET_USERS_PROPS_FOR_PROFILE, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_USERS_PROPS_FOR_PROFILE_WITH_ID)) {
-            properties.put(JDBCRealmConstants.GET_USERS_PROPS_FOR_PROFILE_WITH_ID,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_USERS_PROPS_FOR_PROFILE_WITH_ID_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_USERS_PROPS_FOR_PROFILE_WITH_ID_SQL);
+            properties.put(JDBCRealmConstants.GET_USERS_PROPS_FOR_PROFILE_WITH_ID, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_PROP_FOR_PROFILE)) {
-            properties.put(JDBCRealmConstants.GET_PROP_FOR_PROFILE,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_PROP_FOR_PROFILE_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_PROP_FOR_PROFILE_SQL);
+            properties.put(JDBCRealmConstants.GET_PROP_FOR_PROFILE, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_PROP_FOR_PROFILE_WITH_ID)) {
-            properties.put(JDBCRealmConstants.GET_PROP_FOR_PROFILE_WITH_ID,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_PROP_FOR_PROFILE_WITH_ID_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_PROP_FOR_PROFILE_WITH_ID_SQL);
+            properties.put(JDBCRealmConstants.GET_PROP_FOR_PROFILE_WITH_ID, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_USERS_FOR_PROP)) {
-            properties.put(JDBCRealmConstants.GET_USERS_FOR_PROP,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_USERS_FOR_PROP_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_USERS_FOR_PROP_SQL);
+            properties.put(JDBCRealmConstants.GET_USERS_FOR_PROP, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_USERS_FOR_CLAIM_VALUE)) {
-            properties.put(JDBCRealmConstants.GET_USERS_FOR_CLAIM_VALUE,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_USERS_FOR_CLAIM_VALUE_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_USERS_FOR_CLAIM_VALUE_SQL);
+            properties.put(JDBCRealmConstants.GET_USERS_FOR_CLAIM_VALUE, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_USERS_FOR_PROP_WITH_ID)) {
-            properties.put(JDBCRealmConstants.GET_USERS_FOR_PROP_WITH_ID,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_USERS_FOR_PROP_WITH_ID_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_USERS_FOR_PROP_WITH_ID_SQL);
+            properties.put(JDBCRealmConstants.GET_USERS_FOR_PROP_WITH_ID, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_USERS_FOR_USERNAME)) {
             properties.put(JDBCRealmConstants.GET_USERS_FOR_USERNAME,
@@ -236,12 +284,20 @@ public class JDBCRealmUtil {
                     JDBCRealmConstants.GET_USER_FOR_USERNAME_SQL);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_USERS_FOR_CLAIM_VALUE_WITH_ID)) {
-            properties.put(JDBCRealmConstants.GET_USERS_FOR_CLAIM_VALUE_WITH_ID,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_USERS_FOR_CLAIM_VALUE_WITH_ID_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_USERS_FOR_CLAIM_VALUE_WITH_ID_SQL);
+            properties.put(JDBCRealmConstants.GET_USERS_FOR_CLAIM_VALUE_WITH_ID, sql);
         }
         if (!properties.containsKey(JDBCCaseInsensitiveConstants.GET_USERS_FOR_PROP_WITH_ID_CASE_INSENSITIVE)) {
-            properties.put(JDBCCaseInsensitiveConstants.GET_USERS_FOR_PROP_WITH_ID_CASE_INSENSITIVE,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCCaseInsensitiveConstants.GET_USERS_FOR_PROP_WITH_ID_SQL_CASE_INSENSITIVE_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCCaseInsensitiveConstants.GET_USERS_FOR_PROP_WITH_ID_SQL_CASE_INSENSITIVE);
+            properties.put(JDBCCaseInsensitiveConstants.GET_USERS_FOR_PROP_WITH_ID_CASE_INSENSITIVE, sql);
         }
         if(!properties.containsKey(JDBCCaseInsensitiveConstants.GET_USERS_FOR_USERNAME_WITH_USERNAME_CASE_INSENSITIVE)) {
             properties.put(JDBCCaseInsensitiveConstants.GET_USERS_FOR_USERNAME_WITH_USERNAME_CASE_INSENSITIVE,
@@ -252,20 +308,36 @@ public class JDBCRealmUtil {
                     JDBCCaseInsensitiveConstants.GET_USER_FOR_USERNAME_WITH_USERNAME_SQL_CASE_INSENSITIVE);
         }
         if (!properties.containsKey(JDBCCaseInsensitiveConstants.GET_USERS_FOR_CLAIM_VALUE_WITH_ID_CASE_INSENSITIVE)) {
-            properties.put(JDBCCaseInsensitiveConstants.GET_USERS_FOR_CLAIM_VALUE_WITH_ID_CASE_INSENSITIVE,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCCaseInsensitiveConstants.GET_USERS_FOR_CLAIM_VALUE_WITH_ID_SQL_CASE_INSENSITIVE_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCCaseInsensitiveConstants.GET_USERS_FOR_CLAIM_VALUE_WITH_ID_SQL_CASE_INSENSITIVE);
+            properties.put(JDBCCaseInsensitiveConstants.GET_USERS_FOR_CLAIM_VALUE_WITH_ID_CASE_INSENSITIVE, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_USERS_FOR_PROP_WITH_ESCAPE)) {
-            properties.put(JDBCRealmConstants.GET_USERS_FOR_PROP_WITH_ESCAPE,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_USERS_FOR_PROP_SQL_WITH_ESCAPE_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_USERS_FOR_PROP_SQL_WITH_ESCAPE);
+            properties.put(JDBCRealmConstants.GET_USERS_FOR_PROP_WITH_ESCAPE, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP)) {
-            properties.put(JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP_SQL);
+            properties.put(JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP_WITH_ID)) {
-            properties.put(JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP_WITH_ID,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP_WITH_ID_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP_WITH_ID_SQL);
+            properties.put(JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP_WITH_ID, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP_DB2)) {
             properties.put(JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP_DB2,
@@ -280,12 +352,20 @@ public class JDBCRealmUtil {
                     JDBCRealmConstants.GET_PAGINATED_USERS_FOR_PROP_SQL_MSSQL);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_PAGINATED_USERS_COUNT_FOR_PROP)) {
-            properties.put(JDBCRealmConstants.GET_PAGINATED_USERS_COUNT_FOR_PROP,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_PAGINATED_USERS_COUNT_FOR_PROP_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_PAGINATED_USERS_COUNT_FOR_PROP_SQL);
+            properties.put(JDBCRealmConstants.GET_PAGINATED_USERS_COUNT_FOR_PROP, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_PAGINATED_USERS_COUNT_FOR_PROP_WITH_ID)) {
-            properties.put(JDBCRealmConstants.GET_PAGINATED_USERS_COUNT_FOR_PROP_WITH_ID,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.GET_PAGINATED_USERS_COUNT_FOR_PROP_WITH_ID_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.GET_PAGINATED_USERS_COUNT_FOR_PROP_WITH_ID_SQL);
+            properties.put(JDBCRealmConstants.GET_PAGINATED_USERS_COUNT_FOR_PROP_WITH_ID, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.GET_PROFILE_NAMES)) {
             properties.put(JDBCRealmConstants.GET_PROFILE_NAMES,
@@ -312,7 +392,7 @@ public class JDBCRealmUtil {
                     JDBCRealmConstants.GET_TENANT_ID_FROM_USERNAME_SQL);
         }
         if (!properties.containsKey(JDBCRealmConstants.ADD_USER)) {
-            properties.put(JDBCRealmConstants.ADD_USER, JDBCRealmConstants.ADD_USER_SQL);
+            properties.put(JDBCRealmConstants.ADD_USER, JDBCRealmConstants.ADD_USER_SQL); // TODO:
         }
         if (!properties.containsKey(JDBCRealmConstants.ADD_USER_WITH_ID)) {
             properties.put(JDBCRealmConstants.ADD_USER_WITH_ID, JDBCRealmConstants.ADD_USER_WITH_ID_SQL);
@@ -410,8 +490,12 @@ public class JDBCRealmUtil {
                     JDBCRealmConstants.ON_DELETE_USER_REMOVE_USER_ROLE_WITH_ID_SQL);
         }
         if (!properties.containsKey(JDBCRealmConstants.COUNT_USERS_WITH_CLAIM)) {
-            properties.put(JDBCRealmConstants.COUNT_USERS_WITH_CLAIM,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.COUNT_USERS_WITH_CLAIM_SQL_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.COUNT_USERS_WITH_CLAIM_SQL);
+            properties.put(JDBCRealmConstants.COUNT_USERS_WITH_CLAIM, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.COUNT_USERS)) {
             properties.put(JDBCRealmConstants.COUNT_USERS,
@@ -470,8 +554,12 @@ public class JDBCRealmUtil {
                     JDBCRealmConstants.USER_ID_UNIQUE_SQL_WITH_ID);
         }
         if (!properties.containsKey(JDBCRealmConstants.USER_NAME_UNIQUE_WITH_ID)) {
-            properties.put(JDBCRealmConstants.USER_NAME_UNIQUE_WITH_ID,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCRealmConstants.USER_NAME_UNIQUE_SQL_WITH_ID_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCRealmConstants.USER_NAME_UNIQUE_SQL_WITH_ID);
+            properties.put(JDBCRealmConstants.USER_NAME_UNIQUE_WITH_ID, sql);
         }
         if (!properties.containsKey(JDBCRealmConstants.UPDATE_USER_PROPERTY)) {
             properties.put(JDBCRealmConstants.UPDATE_USER_PROPERTY,
@@ -642,8 +730,12 @@ public class JDBCRealmUtil {
                     JDBCCaseInsensitiveConstants.SELECT_USER_NAME_SQL_CASE_INSENSITIVE);
         }
         if (!properties.containsKey(JDBCCaseInsensitiveConstants.SELECT_USER_WITH_ID_CASE_INSENSITIVE)) {
-            properties.put(JDBCCaseInsensitiveConstants.SELECT_USER_WITH_ID_CASE_INSENSITIVE, JDBCCaseInsensitiveConstants
-                    .SELECT_USER_WITH_ID_SQL_CASE_INSENSITIVE);
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCCaseInsensitiveConstants.SELECT_USER_WITH_ID_SQL_CASE_INSENSITIVE_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
+                    JDBCCaseInsensitiveConstants.SELECT_USER_WITH_ID_SQL_CASE_INSENSITIVE);
+            properties.put(JDBCCaseInsensitiveConstants.SELECT_USER_WITH_ID_CASE_INSENSITIVE, sql);
         }
         if (!properties.containsKey(JDBCCaseInsensitiveConstants.SELECT_USER_ID_FROM_USER_NAME_CASE_INSENSITIVE)) {
             properties.put(JDBCCaseInsensitiveConstants.SELECT_USER_ID_FROM_USER_NAME_CASE_INSENSITIVE,
@@ -725,16 +817,24 @@ public class JDBCRealmUtil {
         }
 
         if (!properties.containsKey(JDBCCaseInsensitiveConstants.GET_PROPS_FOR_PROFILE_CASE_INSENSITIVE)) {
-            properties.put(JDBCCaseInsensitiveConstants.GET_PROPS_FOR_PROFILE_CASE_INSENSITIVE,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCCaseInsensitiveConstants.GET_PROPS_FOR_PROFILE_SQL_CASE_INSENSITIVE_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCCaseInsensitiveConstants.GET_PROPS_FOR_PROFILE_SQL_CASE_INSENSITIVE);
+            properties.put(JDBCCaseInsensitiveConstants.GET_PROPS_FOR_PROFILE_CASE_INSENSITIVE, sql);
         }
         if (!properties.containsKey(JDBCCaseInsensitiveConstants.GET_USERS_PROPS_FOR_PROFILE_CASE_INSENSITIVE)) {
             properties.put(JDBCCaseInsensitiveConstants.GET_USERS_PROPS_FOR_PROFILE_CASE_INSENSITIVE,
                     JDBCCaseInsensitiveConstants.GET_USERS_PROPS_FOR_PROFILE_SQL_CASE_INSENSITIVE);
         }
         if (!properties.containsKey(JDBCCaseInsensitiveConstants.GET_PROP_FOR_PROFILE_CASE_INSENSITIVE)) {
-            properties.put(JDBCCaseInsensitiveConstants.GET_PROP_FOR_PROFILE_CASE_INSENSITIVE,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCCaseInsensitiveConstants.GET_PROP_FOR_PROFILE_SQL_CASE_INSENSITIVE_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCCaseInsensitiveConstants.GET_PROP_FOR_PROFILE_SQL_CASE_INSENSITIVE);
+            properties.put(JDBCCaseInsensitiveConstants.GET_PROP_FOR_PROFILE_CASE_INSENSITIVE, sql);
         }
         if (!properties.containsKey(JDBCCaseInsensitiveConstants.GET_PROFILE_NAMES_FOR_USER_CASE_INSENSITIVE)) {
             properties.put(JDBCCaseInsensitiveConstants.GET_PROFILE_NAMES_FOR_USER_CASE_INSENSITIVE,
@@ -793,8 +893,12 @@ public class JDBCRealmUtil {
                     JDBCCaseInsensitiveConstants.USER_NAME_UNIQUE_SQL_CASE_INSENSITIVE);
         }
         if (!properties.containsKey(JDBCCaseInsensitiveConstants.USER_NAME_UNIQUE_CASE_INSENSITIVE_WITH_ID)) {
-            properties.put(JDBCCaseInsensitiveConstants.USER_NAME_UNIQUE_CASE_INSENSITIVE_WITH_ID,
+            String userAttrMigrationState = getUserAttrMigrationState(properties);
+            String sql = STATE_HYBRID.equals(userAttrMigrationState)
+                    ? JDBCCaseInsensitiveConstants.USER_NAME_UNIQUE_SQL_CASE_INSENSITIVE_WITH_ID_HYBRID
+                    : replaceWriteUserAttrColumnWithUnicode(userAttrMigrationState,
                     JDBCCaseInsensitiveConstants.USER_NAME_UNIQUE_SQL_CASE_INSENSITIVE_WITH_ID);
+            properties.put(JDBCCaseInsensitiveConstants.USER_NAME_UNIQUE_CASE_INSENSITIVE_WITH_ID, sql);
         }
         if (!properties.containsKey(JDBCCaseInsensitiveConstants.ADD_USER_PROPERTY_CASE_INSENSITIVE)) {
             properties.put(JDBCCaseInsensitiveConstants.ADD_USER_PROPERTY_CASE_INSENSITIVE,
@@ -834,5 +938,18 @@ public class JDBCRealmUtil {
         }
 
         return properties;
+    }
+
+    private static String replaceWriteUserAttrColumnWithUnicode(String userAttrMigrationState, String sqlStmt) {
+
+        if (!STATE_UNICODE.equals(userAttrMigrationState)) {
+            return sqlStmt;
+        }
+        return sqlStmt.replace(UM_ATTR_VALUE, UM_ATTR_VALUE_UNICODE);
+    }
+
+    private static String getUserAttrMigrationState(Map<String, String> properties) {
+
+        return properties.get(JDBCRealmConstants.USER_ATTRIBUTE_MIGRATION_STATE);
     }
 }
