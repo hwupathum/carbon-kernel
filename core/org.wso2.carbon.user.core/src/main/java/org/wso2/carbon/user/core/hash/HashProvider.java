@@ -50,6 +50,12 @@ public interface HashProvider {
      */
     byte[] calculateHash(char[] plainText, String salt) throws HashProviderException;
 
+    default boolean verify(char[] plainText, String hashedPassword, String salt) throws HashProviderException {
+
+        byte[] hash = calculateHash(plainText, salt);
+        return hashedPassword.equals(new String(hash));
+    }
+
     /**
      * Get HashProvider parameters.
      *

@@ -866,7 +866,7 @@ public class UniqueIDJDBCUserStoreManager extends JDBCUserStoreManager {
                     authenticationResult = new AuthenticationResult(AuthenticationResult.AuthenticationStatus.FAIL);
                     authenticationResult.setFailureReason(new FailureReason("Password change required."));
                 } else {
-                    password = preparePassword(credential, saltValue);
+                    password = preparePassword(credential, saltValue); //
                     if ((storedPassword != null) && (storedPassword.equals(password))) {
                         isAuthed = true;
                         user = new User(userID, userName, userName, null, null, null, null);
