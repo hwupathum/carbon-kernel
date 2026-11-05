@@ -151,6 +151,7 @@
                 <include>com.fasterxml.jackson.core:jackson-annotations:jar</include>
                 <include>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar</include>
                 <include>com.hubspot.immutables:immutables-exceptions:jar</include>
+                <include>com.hubspot:algebra:jar</include>
                 <include>com.google.re2j:re2j:jar</include>
                 <include>commons-codec:commons-codec:jar</include>
                 <include>ant-contrib:ant-contrib:jar</include>
